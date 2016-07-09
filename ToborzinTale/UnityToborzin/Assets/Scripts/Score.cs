@@ -1,20 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Score : MonoBehaviour {
-	string Message;
-	public static int score;
-	string scoreT;
-	void Start () {
-		Message = "Score: ";
-		score = 0;
+	private float score = 0.0f;
+	public Text DistanceText;
 
-	}
 	void Update(){
-		scoreT = score.ToString ();
+		score += Time.deltaTime;
+		DistanceText.text = ((int)score).ToString();
 	}
-	void OnGUI(){
-		GUI.Label (new Rect (Screen.width - 100f, 50f, 100f, 100f), Message);
-		GUI.Label (new Rect (Screen.width - 50f, 50f, 100f, 100f), scoreT);
-	}
+
 }

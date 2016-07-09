@@ -1,30 +1,62 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 // This script generates the path of the game
-// In this game I move the path instead of the player
 public class PathGenerator : MonoBehaviour {
+	public GameObject[] TilePrefabs;
+	private Transform PlayerTransform;
+	private float SpawnZ = -5.0f;
+	private float TileLength = 20.0f;
+	private int TilesOnScreen = 7;
+	private float safeZone = 25.0f;
+	private int lastprefabIndex = 0;
+	private List<GameObject> activeTiles;
 
-	public static float Speed = 10f; // The speed which the path moves
-	public float SpawnTime; // Spawn time to initialize a new path 
-	Vector3 StartPosition; // The position where the the path starts
-	Vector3 Position; // The curretn position of the path
-	Vector3 Velocity; // Vector to store the the velocity
-	public GameObject Road; // prefab of the path (the same object)
-	void Start () {
-		StartPosition = transform.position; // Initialize the start position
-		Position = transform.position; // Initialize the current position
-		StartCoroutine ("Coroutine", SpawnTime);  //The coroutine is used to spawn a new path after some seconds
+	private void Start(){
+		activeTiles = new List<GameObject> ();
+		PlayerTransform = GameObject.FindGameObjectWithTag ("Player").transform;
+		for (int i = 0; i < TilesOnScreen; i++) {
+			if (i < 3)
+				SpawnTile (0);
+			else
+				SpawnTile ();
+		}
 	}
 
-	void Update () {
-		Velocity = new Vector3 (0, -Speed*Time.deltaTime, 0); // Store the new path move
-		Position += Velocity; // move the path
-		transform.position = Position;  // Update the path's position
+	private void Update(){
 
+		if (PlayerTransform.position.z - safeZone > (SpawnZ - TilesOnScreen * TileLength)) {
+			SpawnTile ();
+			DeleteTile ();
+		}
 	}
-	IEnumerator Coroutine(float Seconds){ // Coroutine function 
-		yield return new WaitForSeconds (Seconds); // The time will pass till a new path is generated
-		Instantiate (Road, StartPosition, transform.rotation); // Generate the new path at start position
-		Destroy (gameObject); // Destroy the previous ath
+
+	private void SpawnTile(int prefabIndex = -1){
+		GameObject Tile;
+		if(prefabIndex == -1)
+			Tile = Instantiate (TilePrefabs [RandomPrefabIndex()]) as GameObject;
+		else
+			Tile = Instantiate (TilePrefabs [prefabIndex]) as GameObject;
+		Tile.transform.SetParent (transform);
+		Tile.transform.position = Vector3.forward * SpawnZ;
+		SpawnZ += TileLength;
+		activeTiles.Add (Tile);
+	}
+
+	private void DeleteTile(){
+		Destroy (activeTiles [0]);
+		activeTiles.RemoveAt (0);
+	}
+
+	private int RandomPrefabIndex(){
+		if (TilePrefabs.Length <= 1) {
+			return 0;
+		}
+		int randomIndex = lastprefabIndex;
+		while (randomIndex == lastprefabIndex) {
+			randomIndex = Random.Range (0, TilePrefabs.Length);
+		}
+		lastprefabIndex = randomIndex;
+		return randomIndex;
 	}
 }
