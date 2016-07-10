@@ -13,10 +13,11 @@ public class PathGenerator : MonoBehaviour {
 	private List<GameObject> activeTiles;
 
 	private void Start(){
+
 		activeTiles = new List<GameObject> ();
 		PlayerTransform = GameObject.FindGameObjectWithTag ("Player").transform;
 		for (int i = 0; i < TilesOnScreen; i++) {
-			if (i < 3)
+			if (i < 5)
 				SpawnTile (0);
 			else
 				SpawnTile ();

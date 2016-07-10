@@ -4,34 +4,43 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 	
 	private CharacterController Controler;
-	private float speed = 10f;
-	private Vector3 Move;
-	private float Verticalvelocity = 0.0f;
-	private float gravity = 30.0f;
-
+	private float speed = 10.0f;
+	private float forwardSpeed = 15.0f;
+	private Vector3 Move = Vector3.zero;
+	private float gravity = 20.0f;
+	private float JumpSpeed = 10.0f;
 	private float animationDuration = 3.0f;
+	private Animator animator;
 
 	void Start(){
+		animator = GetComponent<Animator> ();
 		Controler = GetComponent<CharacterController> ();
 	}
 	void Update(){
 		if (Time.time < animationDuration) {
-			Controler.Move (Vector3.forward * speed * Time.deltaTime);
+			Controler.Move (Vector3.forward * forwardSpeed * Time.deltaTime);
 			return;
 		}
 
-		Move = Vector3.zero;
 		if (Controler.isGrounded) {
-			Verticalvelocity = 0.0f;
-		} else {
-			Verticalvelocity -= gravity*Time.deltaTime;
+			Move = new Vector3(Input.GetAxis("Horizontal")*speed, 0, forwardSpeed);
+			if(Input.GetKey(KeyCode.Space)){
+				animator.SetBool ("Jump", true);
+				Invoke ("StopJump", 0.1f);
+				Move.y = JumpSpeed;
+			}
+
 		}
-
-
-		Move.x = Input.GetAxisRaw ("Horizontal")*speed;
-		Move.y = Verticalvelocity;
-		Move.z = speed;
-
+		Move.x = Input.GetAxis ("Horizontal") * speed;
+		Move.y -= gravity*Time.deltaTime;
 		Controler.Move (Move*Time.deltaTime);
+	}
+
+
+	void StopJump(){
+		animator.SetBool ("Jump", false);
+	}
+	void OnGUI(){
+		GUI.Label (new Rect (new Vector2 (Screen.width - 100f, 100f), new Vector2(100f, 100f)), "Jump ---> Space");
 	}
 }
