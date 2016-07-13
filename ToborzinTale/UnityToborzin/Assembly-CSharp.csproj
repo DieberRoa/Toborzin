@@ -46,12 +46,16 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\MainCamera.cs" />
+     <Compile Include="Assets\Scripts\Obs_Move.cs" />
      <Compile Include="Assets\Scripts\Obs_Movement.cs" />
+     <Compile Include="Assets\Scripts\Obs_roundInstance.cs" />
      <Compile Include="Assets\Scripts\Obstacles_Manager.cs" />
+     <Compile Include="Assets\Scripts\OnClick.cs" />
      <Compile Include="Assets\Scripts\PathGenerator.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Score.cs" />
      <None Include="Assets\Wood texture floor_01\readme.txt" />
+     <None Include="Assets\StaffOfPain\readme_first.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

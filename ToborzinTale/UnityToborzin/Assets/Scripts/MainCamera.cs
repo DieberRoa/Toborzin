@@ -7,21 +7,21 @@ public class MainCamera : MonoBehaviour {
 	private Vector3 Offset;
 	private Vector3 Move;
 
-	private float transition = 0.0f;
+	public static float transition = 0.0f;
 	private float animationDuration = 3.0f;
 	private Vector3 AnimationOffset = new Vector3 (0, 5, 5);
 
 	void Start () {
 		LookAt = GameObject.FindGameObjectWithTag ("Player").transform;
-		Offset = transform.position - LookAt.transform.position;
+		Offset = transform.position - LookAt.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Move = LookAt.transform.position + Offset;
+		Move = LookAt.position + Offset;
 
 		Move.x = 0;
-		Move.y = 6;
+		Move.y = 5;
 
 		if (transition > 1.0f) {
 			transform.position = Move;

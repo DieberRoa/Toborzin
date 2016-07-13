@@ -3,37 +3,37 @@ using System.Collections;
 // This script controls the player movement
 public class PlayerController : MonoBehaviour {
 	
-	private CharacterController Controler;
+	private CharacterController Controller;
 	private float speed = 10.0f;
 	private float forwardSpeed = 15.0f;
 	private Vector3 Move = Vector3.zero;
 	private float gravity = 20.0f;
 	private float JumpSpeed = 10.0f;
-	private float animationDuration = 3.0f;
 	private Animator animator;
 
 	void Start(){
 		animator = GetComponent<Animator> ();
-		Controler = GetComponent<CharacterController> ();
+		animator.Play ("Running");
+		Controller = GetComponent<CharacterController> ();
+
 	}
 	void Update(){
-		if (Time.time < animationDuration) {
-			Controler.Move (Vector3.forward * forwardSpeed * Time.deltaTime);
+		if (MainCamera.transition < 1.0f) {
+			Controller.Move (Vector3.forward * forwardSpeed * Time.deltaTime);
 			return;
 		}
 
-		if (Controler.isGrounded) {
+		if (Controller.isGrounded) {
 			Move = new Vector3(Input.GetAxis("Horizontal")*speed, 0, forwardSpeed);
-			if(Input.GetKey(KeyCode.Space)){
+			if (Input.GetKey (KeyCode.Space)) {
 				animator.SetBool ("Jump", true);
 				Invoke ("StopJump", 0.1f);
 				Move.y = JumpSpeed;
-			}
-
+			} 
 		}
 		Move.x = Input.GetAxis ("Horizontal") * speed;
 		Move.y -= gravity*Time.deltaTime;
-		Controler.Move (Move*Time.deltaTime);
+		Controller.Move (Move*Time.deltaTime);
 	}
 
 
