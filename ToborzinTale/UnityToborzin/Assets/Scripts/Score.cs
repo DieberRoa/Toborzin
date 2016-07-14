@@ -10,5 +10,4 @@ public class Score : MonoBehaviour {
 		score += Time.deltaTime;
 		DistanceText.text = ((int)score).ToString();
 	}
-
 }

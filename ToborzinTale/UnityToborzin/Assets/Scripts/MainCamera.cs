@@ -21,7 +21,7 @@ public class MainCamera : MonoBehaviour {
 		Move = LookAt.position + Offset;
 
 		Move.x = 0;
-		Move.y = 5;
+		Move.y = 6f;
 
 		if (transition > 1.0f) {
 			transform.position = Move;

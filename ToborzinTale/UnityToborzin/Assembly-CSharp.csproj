@@ -47,9 +47,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\MainCamera.cs" />
      <Compile Include="Assets\Scripts\Obs_Move.cs" />
-     <Compile Include="Assets\Scripts\Obs_Movement.cs" />
      <Compile Include="Assets\Scripts\Obs_roundInstance.cs" />
-     <Compile Include="Assets\Scripts\Obstacles_Manager.cs" />
      <Compile Include="Assets\Scripts\OnClick.cs" />
      <Compile Include="Assets\Scripts\PathGenerator.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />

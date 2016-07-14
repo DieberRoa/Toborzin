@@ -11,6 +11,11 @@ public class PlayerController : MonoBehaviour {
 	private float JumpSpeed = 10.0f;
 	private Animator animator;
 
+	private float score = 0.0f;
+	private int Difficultylevel = 1;
+	private int Maxdifficultylevel = 10;
+	private int Scoretonextlevel = 10;
+
 	void Start(){
 		animator = GetComponent<Animator> ();
 		animator.Play ("Running");
@@ -18,6 +23,12 @@ public class PlayerController : MonoBehaviour {
 
 	}
 	void Update(){
+		score += Time.deltaTime*Difficultylevel;
+
+		if (score >= Scoretonextlevel) {
+			LevelUp ();
+		}
+
 		if (MainCamera.transition < 1.0f) {
 			Controller.Move (Vector3.forward * forwardSpeed * Time.deltaTime);
 			return;
@@ -42,5 +53,19 @@ public class PlayerController : MonoBehaviour {
 	}
 	void OnGUI(){
 		GUI.Label (new Rect (new Vector2 (Screen.width - 100f, 100f), new Vector2(100f, 100f)), "Jump ---> Space");
+		GUI.Label (new Rect (new Vector2 (Screen.width - 100f, 200f), new Vector2(100f, 100f)), ((int)score).ToString());
+	}
+	void LevelUp(){
+		if (Difficultylevel == Maxdifficultylevel)
+			return;
+		Scoretonextlevel *= 2;
+		Difficultylevel++;
+		SetSpeed (Difficultylevel);
+		Debug.Log (Difficultylevel);
+	}
+
+	void SetSpeed(float modifier){
+		forwardSpeed = 15.0f + modifier;
+		speed = 10.0f + modifier;
 	}
 }

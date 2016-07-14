@@ -6,12 +6,17 @@ public class Obs_Move : MonoBehaviour {
 	private Vector3 Position;
 	private Vector3 Velocity;
 	private float Move;
-	private float RotSpeed;
+	private float Rotation;
+	private Transform player;
+	private int[] Direction = new int[2] {1, -1}; 
+	private int index;
 
 	void Start(){
+		index = Random.Range(0, Direction.Length);
+		player = GameObject.FindGameObjectWithTag ("Player").transform;
 		Position = transform.position;
-		Move = 2.0f;
-		RotSpeed = 0.0f;
+		Move = 2.0f*Direction[index];
+		Rotation = 0.0f;
 	}
 
 	void Update(){
@@ -25,8 +30,11 @@ public class Obs_Move : MonoBehaviour {
 		}
 		transform.position = Position;
 		//[Rotation]
-		RotSpeed += 500.0f*Time.deltaTime;
-		transform.eulerAngles = new Vector3 (90, 0, RotSpeed);
-
+		Rotation += 500.0f*Time.deltaTime;
+		transform.eulerAngles = new Vector3 (90, 0, Rotation);
+		//[Delete object]
+		if(player.position.z > transform.position.z + 20.0f){
+			Destroy (gameObject);
+		}
 	}
 }
