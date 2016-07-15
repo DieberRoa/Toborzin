@@ -7,11 +7,14 @@ public class MainCamera : MonoBehaviour {
 	private Vector3 Offset;
 	private Vector3 Move;
 
-	public static float transition = 0.0f;
-	private float animationDuration = 3.0f;
-	private Vector3 AnimationOffset = new Vector3 (0, 5, 5);
+	public static float transition;
+	private float animationDuration;
+	private Vector3 AnimationOffset;
 
 	void Start () {
+		transition = 0.0f;
+		animationDuration = 3.0f;
+		AnimationOffset =  new Vector3 (0, 5, 5);
 		LookAt = GameObject.FindGameObjectWithTag ("Player").transform;
 		Offset = transform.position - LookAt.position;
 	}

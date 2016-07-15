@@ -9,7 +9,6 @@ public class PathGenerator : MonoBehaviour {
 	private float TileLength = 20.0f;
 	private int TilesOnScreen = 7;
 	private float safeZone = 25.0f;
-	private int lastprefabIndex = 0;
 	private List<GameObject> activeTiles;
 
 	private void Start(){
@@ -34,8 +33,9 @@ public class PathGenerator : MonoBehaviour {
 
 	private void SpawnTile(int prefabIndex = -1){
 		GameObject Tile;
-		if(prefabIndex == -1)
-			Tile = Instantiate (TilePrefabs [RandomPrefabIndex()]) as GameObject;
+		if (prefabIndex == -1) {
+			Tile = Instantiate (TilePrefabs [RandomPrefabIndex ()]) as GameObject;
+		}
 		else
 			Tile = Instantiate (TilePrefabs [prefabIndex]) as GameObject;
 		Tile.transform.SetParent (transform);
@@ -50,14 +50,7 @@ public class PathGenerator : MonoBehaviour {
 	}
 
 	private int RandomPrefabIndex(){
-		if (TilePrefabs.Length <= 1) {
-			return 0;
-		}
-		int randomIndex = lastprefabIndex;
-		while (randomIndex == lastprefabIndex) {
-			randomIndex = Random.Range (0, TilePrefabs.Length);
-		}
-		lastprefabIndex = randomIndex;
+		int randomIndex = Random.Range (1, TilePrefabs.Length);
 		return randomIndex;
 	}
 }

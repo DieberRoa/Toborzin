@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 // This script controls the player movement
 public class PlayerController : MonoBehaviour {
 	
 	private CharacterController Controller;
 	private float speed = 10.0f;
-	private float forwardSpeed = 15.0f;
+	private float forwardSpeed = 20.0f;
 	private Vector3 Move = Vector3.zero;
 	private float gravity = 20.0f;
 	private float JumpSpeed = 10.0f;
@@ -15,14 +16,22 @@ public class PlayerController : MonoBehaviour {
 	private int Difficultylevel = 1;
 	private int Maxdifficultylevel = 10;
 	private int Scoretonextlevel = 10;
+	private bool isDead = false;
+
+	private AudioSource DeadSound;
 
 	void Start(){
+		transform.position = Vector3.zero;
+		DeadSound = GetComponent<AudioSource> ();
 		animator = GetComponent<Animator> ();
 		animator.Play ("Running");
 		Controller = GetComponent<CharacterController> ();
 
 	}
 	void Update(){
+		if (isDead)
+			return;
+
 		score += Time.deltaTime*Difficultylevel;
 
 		if (score >= Scoretonextlevel) {
@@ -61,11 +70,22 @@ public class PlayerController : MonoBehaviour {
 		Scoretonextlevel *= 2;
 		Difficultylevel++;
 		SetSpeed (Difficultylevel);
-		Debug.Log (Difficultylevel);
 	}
 
 	void SetSpeed(float modifier){
 		forwardSpeed = 15.0f + modifier;
 		speed = 10.0f + modifier;
+	}
+
+	private void OnControllerColliderHit(ControllerColliderHit hit){
+		if (hit.gameObject.tag == "Obs") {
+			DeadSound.Play ();
+			isDead = true;
+			Invoke ("Death", DeadSound.clip.length);
+		}
+	}
+
+	private void Death (){
+		SceneManager.LoadScene (2);
 	}
 }
