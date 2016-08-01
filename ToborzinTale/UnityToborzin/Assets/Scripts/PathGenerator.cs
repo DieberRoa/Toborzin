@@ -2,55 +2,83 @@
 using System.Collections;
 using System.Collections.Generic;
 // This script generates the path of the game
-public class PathGenerator : MonoBehaviour {
-	public GameObject[] TilePrefabs;
-	private Transform PlayerTransform;
-	private float SpawnZ = -5.0f;
-	private float TileLength = 20.0f;
-	private int TilesOnScreen = 7;
-	private float safeZone = 25.0f;
-	private List<GameObject> activeTiles;
+public class PathGenerator : MonoBehaviour{
 
-	private void Start(){
+	public GameObject[] PathTypes;
+	private List<GameObject> ActivePaths;
 
-		activeTiles = new List<GameObject> ();
-		PlayerTransform = GameObject.FindGameObjectWithTag ("Player").transform;
-		for (int i = 0; i < TilesOnScreen; i++) {
-			if (i < 5)
-				SpawnTile (0);
-			else
-				SpawnTile ();
-		}
+	void Start(){
+		ActivePaths = new List<GameObject> ();
+		NewPath (0.0f, 0);
 	}
 
-	private void Update(){
+	public void NewPath(float ChangeDir, int prefabIndex = -1){
+		GameObject Path;
+		string direction = SetDirection(ChangeDir);
 
-		if (PlayerTransform.position.z - safeZone > (SpawnZ - TilesOnScreen * TileLength)) {
-			SpawnTile ();
-			DeleteTile ();
-		}
-	}
+		float ZParent = transform.position.z;
+		float XParent = transform.position.x;
 
-	private void SpawnTile(int prefabIndex = -1){
-		GameObject Tile;
 		if (prefabIndex == -1) {
-			Tile = Instantiate (TilePrefabs [RandomPrefabIndex ()]) as GameObject;
+			Path = Instantiate (PathTypes [RandomIndex ()]) as GameObject;
+		}else {
+			Path = Instantiate (PathTypes [prefabIndex]) as GameObject;
+			ZParent = ((Path.transform.childCount) * 20)-5;
+			transform.position = new Vector3 (XParent, 0, ZParent);
+			ActivePaths.Add (Path);
+			return;
 		}
-		else
-			Tile = Instantiate (TilePrefabs [prefabIndex]) as GameObject;
-		Tile.transform.SetParent (transform);
-		Tile.transform.position = Vector3.forward * SpawnZ;
-		SpawnZ += TileLength;
-		activeTiles.Add (Tile);
+
+		Path.transform.position = transform.position;
+		if (direction == "forward") {
+			Path.transform.eulerAngles = new Vector3 (0, 0, 0);
+			Path.transform.position += Vector3.forward*40;
+			ZParent += ((Path.transform.childCount + 2) * 20)-5;
+
+		} else if (direction == "right") {
+			Path.transform.eulerAngles = new Vector3 (0, 90, 0);
+			Path.transform.position += Vector3.right * 40;
+			XParent += ((Path.transform.childCount + 2)* 20)-5;
+
+		} else if (direction == "left") {
+			Path.transform.eulerAngles = new Vector3 (0, -90, 0);
+			Path.transform.position += Vector3.left * 40;
+			XParent += ((Path.transform.childCount + 2) * -20)+5;
+
+
+		} else if (direction == "backward") {
+			Path.transform.eulerAngles = new Vector3 (0, 180, 0);
+			Path.transform.position += Vector3.back * 40;
+			ZParent += ((Path.transform.childCount + 2) * -20)+5;
+		}
+		ActivePaths.Add (Path);
+		if (ActivePaths.Count == 4) {
+			DeletePath ();
+		}
+
+		transform.position = new Vector3 (XParent, 0, ZParent);
+	}
+	private int RandomIndex(){
+		int Index = Random.Range (1, PathTypes.Length);
+		return Index;
 	}
 
-	private void DeleteTile(){
-		Destroy (activeTiles [0]);
-		activeTiles.RemoveAt (0);
+	private void DeletePath(){
+		Destroy (ActivePaths [0]);
+		ActivePaths.RemoveAt (0);
 	}
 
-	private int RandomPrefabIndex(){
-		int randomIndex = Random.Range (1, TilePrefabs.Length);
-		return randomIndex;
+	public string SetDirection(float ChangeDirection){
+		if (ChangeDirection == 0.0f) {
+			return "forward";
+		} else if (ChangeDirection == 90.0f) {
+			return "right";
+		} else if (ChangeDirection == -90.0f) {
+			return "left";
+		} else if (ChangeDirection == 180.0f || ChangeDirection == -180.0f) {
+			return "backward";
+		} else {
+			return "ERROR";
+		}
 	}
 }
